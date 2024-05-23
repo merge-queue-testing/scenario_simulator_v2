@@ -259,6 +259,8 @@ auto EgoEntity::requestSpeedChange(
     "purposes only.");
 }
 
+void EgoEntity::requestClearRoute() { field_operator_application->clearRoute(); }
+
 auto EgoEntity::getDefaultDynamicConstraints() const
   -> const traffic_simulator_msgs::msg::DynamicConstraints &
 {
