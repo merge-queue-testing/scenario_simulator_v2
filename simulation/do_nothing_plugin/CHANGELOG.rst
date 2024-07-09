@@ -21,6 +21,9 @@ Changelog for package do_nothing_plugin
 * Merge remote-tracking branch 'origin/master' into feature/publish_empty_context
 * Contributors: Masaya Kataoka
 
+2.6.1 (2024-07-09)
+------------------
+
 2.6.0 (2024-07-08)
 ------------------
 * Bump version of scenario_simulator_v2 from version 2.4.2 to version 2.5.0
