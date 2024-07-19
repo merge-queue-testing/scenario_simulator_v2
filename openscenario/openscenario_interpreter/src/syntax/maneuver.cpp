@@ -64,21 +64,20 @@ auto Maneuver::running_events_count() const -> std::size_t
   return ret;
 }
 
-auto operator<<(nlohmann::json & json, const Maneuver & maneuver) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Maneuver & maneuver) -> void
 {
-  json["name"] = maneuver.name;
+  json.add("name", maneuver.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(maneuver.state());
+  json.add("currentState", boost::lexical_cast<std::string>(maneuver.state()));
 
-  json["Event"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("Event");
 
-  for (const auto & event : maneuver.elements) {
-    nlohmann::json json_event;
-    json_event << event.as<Event>();
-    json["Event"].push_back(json_event);
+    for (const auto & event : maneuver.elements) {
+      auto object = elements.append_object();
+      object << event.as<Event>();
+    }
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

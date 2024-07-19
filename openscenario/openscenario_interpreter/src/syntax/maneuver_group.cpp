@@ -59,24 +59,23 @@ auto ManeuverGroup::start() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const ManeuverGroup & maneuver_group) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const ManeuverGroup & maneuver_group) -> void
 {
-  json["name"] = maneuver_group.name;
+  json.add("name", maneuver_group.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(maneuver_group.state());
+  json.add("currentState", boost::lexical_cast<std::string>(maneuver_group.state()));
 
-  json["currentExecutionCount"] = maneuver_group.current_execution_count;
-  json["maximumExecutionCount"] = maneuver_group.maximum_execution_count;
+  json.add("currentExecutionCount", maneuver_group.current_execution_count);
+  json.add("maximumExecutionCount", maneuver_group.maximum_execution_count);
 
-  json["Maneuver"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("Maneuver");
 
-  for (auto && maneuver : maneuver_group.elements) {
-    nlohmann::json json_maneuver;
-    json_maneuver << maneuver.as<Maneuver>();
-    json["Maneuver"].push_back(json_maneuver);
+    for (auto && maneuver : maneuver_group.elements) {
+      auto object = elements.append_object();
+      object << maneuver.as<Maneuver>();
+    }
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

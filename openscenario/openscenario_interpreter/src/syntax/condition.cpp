@@ -68,13 +68,13 @@ auto Condition::evaluate() -> Object
   }
 }
 
-auto operator<<(nlohmann::json & json, const Condition & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Condition & datum) -> void
 {
-  json["currentEvaluation"] = datum.description();
+  json.add("currentEvaluation", datum.description());
 
-  json["currentValue"] = boost::lexical_cast<std::string>(Boolean(datum.current_value));
+  json.add("currentValue", boost::lexical_cast<std::string>(Boolean(datum.current_value)));
 
-  json["name"] = datum.name;
+  json.add("name", datum.name);
 
   // clang-format off
   static const std::unordered_map<
@@ -86,9 +86,7 @@ auto operator<<(nlohmann::json & json, const Condition & datum) -> nlohmann::jso
   };
   // clang-format on
 
-  json["type"] = table.at(datum.type())(datum);
-
-  return json;
+  json.add("type", table.at(datum.type())(datum));
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

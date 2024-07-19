@@ -22,6 +22,7 @@
 #include <openscenario_interpreter/syntax/priority.hpp>
 #include <openscenario_interpreter/syntax/storyboard_element.hpp>
 #include <openscenario_interpreter/syntax/trigger.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -53,7 +54,7 @@ struct Event : private Scope, public StoryboardElement
 
   auto evaluate() -> Object override;
 
-  friend auto operator<<(nlohmann::json &, const Event &) -> nlohmann::json &;
+  friend auto operator<<(SimplifiedJSON &, const Event &) -> void;
 
 private:
   Maneuver & parent_maneuver;

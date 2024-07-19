@@ -20,6 +20,7 @@
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/file_header.hpp>
 #include <openscenario_interpreter/syntax/open_scenario_category.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -55,7 +56,7 @@ struct OpenScenario : public Scope
   auto load(const boost::filesystem::path &) -> const pugi::xml_node &;
 };
 
-auto operator<<(nlohmann::json &, const OpenScenario &) -> nlohmann::json &;
+auto operator<<(SimplifiedJSON &, const OpenScenario &) -> void;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

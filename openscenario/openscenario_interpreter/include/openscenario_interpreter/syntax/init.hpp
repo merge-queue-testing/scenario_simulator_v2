@@ -18,6 +18,7 @@
 #include <nlohmann/json.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/init_actions.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -48,7 +49,7 @@ struct Init
   auto startNonInstantaneousActions() -> void;
 };
 
-auto operator<<(nlohmann::json &, const Init &) -> nlohmann::json &;
+auto operator<<(SimplifiedJSON &, const Init &) -> void;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

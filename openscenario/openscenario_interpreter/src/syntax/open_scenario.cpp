@@ -44,25 +44,29 @@ auto OpenScenario::load(const boost::filesystem::path & filepath) -> const pugi:
   }
 }
 
-auto operator<<(nlohmann::json & json, const OpenScenario & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const OpenScenario & datum) -> void
 {
-  json["version"] = "1.0";
+  json.add("version", "1.0");
 
-  json["frame"] = datum.frame;
+  json.add("frame", datum.frame);
 
-  // clang-format off
-  json["CurrentStates"]["completeState"]   = openscenario_interpreter::complete_state  .use_count() - 1;
-  json["CurrentStates"]["runningState"]    = openscenario_interpreter::running_state   .use_count() - 1;
-  json["CurrentStates"]["standbyState"]    = openscenario_interpreter::standby_state   .use_count() - 1;
-  json["CurrentStates"]["startTransition"] = openscenario_interpreter::start_transition.use_count() - 1;
-  json["CurrentStates"]["stopTransition"]  = openscenario_interpreter::stop_transition .use_count() - 1;
-  // clang-format on
-
-  if (datum.category.is<ScenarioDefinition>()) {
-    json["OpenSCENARIO"] << datum.category.as<ScenarioDefinition>();
+  {
+    auto current_states = json.add_object("CurrentStates");
+    // clang-format off
+    current_states.add("completeState",   openscenario_interpreter::complete_state  .use_count() - 1);
+    current_states.add("runningState",    openscenario_interpreter::running_state   .use_count() - 1);
+    current_states.add("standbyState",    openscenario_interpreter::standby_state   .use_count() - 1);
+    current_states.add("startTransition", openscenario_interpreter::start_transition.use_count() - 1);
+    current_states.add("stopTransition",  openscenario_interpreter::stop_transition .use_count() - 1);
+    // clang-format on
   }
 
-  return json;
+  if (datum.category.is<ScenarioDefinition>()) {
+    {
+      auto object = json.add_object("OpenSCENARIO");
+      object << datum.category.as<ScenarioDefinition>();
+    }
+  }
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

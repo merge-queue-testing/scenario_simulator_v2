@@ -49,21 +49,20 @@ auto Story::run() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Story & story) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Story & story) -> void
 {
-  json["name"] = story.name;
+  json.add("name", story.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(story.state());
+  json.add("currentState", boost::lexical_cast<std::string>(story.state()));
 
-  json["Act"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("Act");
 
-  for (auto && act : story.elements) {
-    nlohmann::json json_act;
-    json_act << act.as<Act>();
-    json["Act"].push_back(json_act);
+    for (auto && act : story.elements) {
+      auto object = elements.append_object();
+      object << act.as<Act>();
+    }
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

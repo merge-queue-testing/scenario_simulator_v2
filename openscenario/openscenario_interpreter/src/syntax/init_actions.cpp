@@ -154,33 +154,33 @@ auto InitActions::runNonInstantaneousActions() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const InitActions & init_actions) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const InitActions & init_actions) -> void
 {
-  json["GlobalAction"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("GlobalAction");
 
-  for (const auto & init_action : init_actions.global_actions) {
-    nlohmann::json action;
-    action["type"] = makeTypename(init_action.as<GlobalAction>().type());
-    json["GlobalAction"].push_back(action);
+    for (const auto & init_action : init_actions.global_actions) {
+      elements.append_object().add("type", makeTypename(init_action.as<GlobalAction>().type()));
+    }
   }
 
-  json["UserDefinedAction"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("UserDefinedAction");
 
-  for (const auto & init_action : init_actions.user_defined_actions) {
-    nlohmann::json action;
-    action["type"] = makeTypename(init_action.as<UserDefinedAction>().type());
-    json["UserDefinedAction"].push_back(action);
+    for (const auto & init_action : init_actions.user_defined_actions) {
+      elements.append_object().add(
+        "type", makeTypename(init_action.as<UserDefinedAction>().type()));
+    }
   }
 
-  json["Private"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("Private");
 
-  for (const auto & init_action : init_actions.privates) {
-    nlohmann::json action;
-    action << init_action.as<Private>();
-    json["Private"].push_back(action);
+    for (const auto & init_action : init_actions.privates) {
+      auto object = elements.append_object();
+      object << init_action.as<Private>();
+    }
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

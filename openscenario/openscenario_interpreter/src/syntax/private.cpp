@@ -85,19 +85,17 @@ auto Private::startNonInstantaneousActions() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Private & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Private & datum) -> void
 {
-  json["entityRef"] = datum.entity_ref;
+  json.add("entityRef", datum.entity_ref);
 
-  json["PrivateAction"] = nlohmann::json::array();
+  {
+    auto elements = json.add_array("PrivateAction");
 
-  for (const auto & private_action : datum.private_actions) {
-    nlohmann::json action;
-    action["type"] = makeTypename(private_action.type());
-    json["PrivateAction"].push_back(action);
+    for (const auto & private_action : datum.private_actions) {
+      elements.append_object().add("type", makeTypename(private_action.type()));
+    }
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

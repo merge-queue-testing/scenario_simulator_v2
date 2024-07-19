@@ -27,6 +27,7 @@
 #include <openscenario_interpreter/syntax/condition_edge.hpp>
 #include <openscenario_interpreter/syntax/double.hpp>
 #include <openscenario_interpreter/syntax/string.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 #include <tuple>
 
@@ -90,7 +91,7 @@ private:
   }
 };
 
-auto operator<<(nlohmann::json &, const Condition &) -> nlohmann::json &;
+auto operator<<(SimplifiedJSON &, const Condition &) -> void;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

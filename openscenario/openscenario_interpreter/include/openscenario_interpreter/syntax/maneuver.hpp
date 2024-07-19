@@ -19,6 +19,7 @@
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/parameter_declarations.hpp>
 #include <openscenario_interpreter/syntax/storyboard_element.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -48,7 +49,7 @@ struct Maneuver : public Scope, public StoryboardElement
 
   auto running_events_count() const -> std::size_t;
 
-  friend auto operator<<(nlohmann::json &, const Maneuver &) -> nlohmann::json &;
+  friend auto operator<<(SimplifiedJSON &, const Maneuver &) -> void;
 };
 }  // namespace syntax
 }  // namespace openscenario_interpreter

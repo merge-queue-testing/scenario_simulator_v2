@@ -41,16 +41,17 @@ auto ScenarioDefinition::evaluate() -> Object
 
 auto operator<<(std::ostream & os, const ScenarioDefinition & datum) -> std::ostream &
 {
-  nlohmann::json json;
+  SimplifiedJSON json;
+  json << datum;
+  json.finish();
 
-  return os << (json << datum).dump(2);
+  return os << json.str();
 }
 
-auto operator<<(nlohmann::json & json, const ScenarioDefinition & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const ScenarioDefinition & datum) -> void
 {
-  json["Storyboard"] << datum.storyboard;
-
-  return json;
+  auto object = json.add_object("Storyboard");
+  object << datum.storyboard;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

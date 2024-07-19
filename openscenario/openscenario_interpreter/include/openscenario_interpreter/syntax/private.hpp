@@ -18,6 +18,7 @@
 #include <nlohmann/json.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/private_action.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -59,7 +60,7 @@ struct Private : public Scope
   auto startNonInstantaneousActions() -> void;
 };
 
-auto operator<<(nlohmann::json &, const Private &) -> nlohmann::json &;
+auto operator<<(SimplifiedJSON &, const Private &) -> void;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

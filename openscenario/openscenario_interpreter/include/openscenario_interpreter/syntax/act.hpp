@@ -19,6 +19,7 @@
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/storyboard_element.hpp>
 #include <openscenario_interpreter/syntax/trigger.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -43,7 +44,7 @@ struct Act : public Scope, public StoryboardElement
 
   auto run() -> void override;
 
-  friend auto operator<<(nlohmann::json &, const Act &) -> nlohmann::json &;
+  friend auto operator<<(SimplifiedJSON &, const Act &) -> void;
 };
 }  // namespace syntax
 }  // namespace openscenario_interpreter

@@ -85,21 +85,39 @@ def launch_setup(context, *args, **kwargs):
     vehicle_model                       = LaunchConfiguration("vehicle_model",                          default="")
     # fmt: on
 
-    print(f"architecture_type                   := {architecture_type.perform(context)}")
-    print(f"autoware_launch_file                := {autoware_launch_file.perform(context)}")
-    print(f"autoware_launch_package             := {autoware_launch_package.perform(context)}")
-    print(f"consider_acceleration_by_road_slope := {consider_acceleration_by_road_slope.perform(context)}")
-    print(f"consider_pose_by_road_slope         := {consider_pose_by_road_slope.perform(context)}")
+    print(
+        f"architecture_type                   := {architecture_type.perform(context)}"
+    )
+    print(
+        f"autoware_launch_file                := {autoware_launch_file.perform(context)}"
+    )
+    print(
+        f"autoware_launch_package             := {autoware_launch_package.perform(context)}"
+    )
+    print(
+        f"consider_acceleration_by_road_slope := {consider_acceleration_by_road_slope.perform(context)}"
+    )
+    print(
+        f"consider_pose_by_road_slope         := {consider_pose_by_road_slope.perform(context)}"
+    )
     print(f"enable_perf                         := {enable_perf.perform(context)}")
-    print(f"global_frame_rate                   := {global_frame_rate.perform(context)}")
-    print(f"global_real_time_factor             := {global_real_time_factor.perform(context)}")
+    print(
+        f"global_frame_rate                   := {global_frame_rate.perform(context)}"
+    )
+    print(
+        f"global_real_time_factor             := {global_real_time_factor.perform(context)}"
+    )
     print(f"global_timeout                      := {global_timeout.perform(context)}")
-    print(f"initialize_duration                 := {initialize_duration.perform(context)}")
+    print(
+        f"initialize_duration                 := {initialize_duration.perform(context)}"
+    )
     print(f"launch_autoware                     := {launch_autoware.perform(context)}")
     print(f"launch_rviz                         := {launch_rviz.perform(context)}")
     print(f"output_directory                    := {output_directory.perform(context)}")
     print(f"port                                := {port.perform(context)}")
-    print(f"publish_empty_context               := {publish_empty_context.perform(context)}")
+    print(
+        f"publish_empty_context               := {publish_empty_context.perform(context)}"
+    )
     print(f"record                              := {record.perform(context)}")
     print(f"rviz_config                         := {rviz_config.perform(context)}")
     print(f"scenario                            := {scenario.perform(context)}")
@@ -110,7 +128,7 @@ def launch_setup(context, *args, **kwargs):
 
     def make_launch_prefix():
         if enable_perf.perform(context) == "True":
-            return "perf record -F 10000"
+            return "perf record --call-graph dwarf -o perf.data -F 10000"
         else:
             return ""
 
@@ -119,12 +137,14 @@ def launch_setup(context, *args, **kwargs):
             {"architecture_type": architecture_type},
             {"autoware_launch_file": autoware_launch_file},
             {"autoware_launch_package": autoware_launch_package},
-            {"consider_acceleration_by_road_slope": consider_acceleration_by_road_slope},
+            {
+                "consider_acceleration_by_road_slope": consider_acceleration_by_road_slope
+            },
             {"consider_pose_by_road_slope": consider_pose_by_road_slope},
             {"initialize_duration": initialize_duration},
             {"launch_autoware": launch_autoware},
             {"port": port},
-            {"publish_empty_context" : publish_empty_context},
+            {"publish_empty_context": publish_empty_context},
             {"record": record},
             {"rviz_config": rviz_config},
             {"sensor_model": sensor_model},
@@ -205,7 +225,7 @@ def launch_setup(context, *args, **kwargs):
             executable="openscenario_interpreter_node",
             namespace="simulation",
             output="screen",
-            parameters=[{"use_sim_time": use_sim_time}]+make_parameters(),
+            parameters=[{"use_sim_time": use_sim_time}] + make_parameters(),
             prefix=make_launch_prefix(),
             on_exit=ShutdownOnce(),
         ),

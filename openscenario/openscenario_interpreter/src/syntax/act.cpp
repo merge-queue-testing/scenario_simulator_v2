@@ -46,21 +46,18 @@ auto Act::run() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Act & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Act & datum) -> void
 {
-  json["name"] = datum.name;
+  json.add("name", datum.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(datum.state());
+  json.add("currentState", boost::lexical_cast<std::string>(datum.state()));
 
-  json["ManeuverGroup"] = nlohmann::json::array();
+  auto elements = json.add_array("ManeuverGroup");
 
   for (auto && maneuver_group : datum.elements) {
-    nlohmann::json act;
-    act << maneuver_group.as<ManeuverGroup>();
-    json["ManeuverGroup"].push_back(act);
+    auto object = elements.append_object();
+    object << maneuver_group.as<ManeuverGroup>();
   }
-
-  return json;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

@@ -19,6 +19,7 @@
 #include <openscenario_interpreter/syntax/actors.hpp>
 #include <openscenario_interpreter/syntax/maneuver.hpp>
 #include <openscenario_interpreter/syntax/storyboard_element.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -48,7 +49,7 @@ struct ManeuverGroup : public Scope, public StoryboardElement
 
   auto start() -> void override;
 
-  friend auto operator<<(nlohmann::json &, const ManeuverGroup &) -> nlohmann::json &;
+  friend auto operator<<(SimplifiedJSON &, const ManeuverGroup &) -> void;
 };
 }  // namespace syntax
 }  // namespace openscenario_interpreter

@@ -21,6 +21,7 @@
 #include <openscenario_interpreter/syntax/parameter_declarations.hpp>
 #include <openscenario_interpreter/syntax/road_network.hpp>
 #include <openscenario_interpreter/syntax/storyboard.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -58,7 +59,7 @@ struct ScenarioDefinition
 
   friend auto operator<<(std::ostream &, const ScenarioDefinition &) -> std::ostream &;
 
-  friend auto operator<<(nlohmann::json &, const ScenarioDefinition &) -> nlohmann::json &;
+  friend auto operator<<(SimplifiedJSON &, const ScenarioDefinition &) -> void;
 };
 
 }  // namespace syntax

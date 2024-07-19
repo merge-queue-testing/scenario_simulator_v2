@@ -42,11 +42,10 @@ auto Init::runNonInstantaneousActions() -> void { actions.runNonInstantaneousAct
 
 auto Init::startNonInstantaneousActions() -> void { actions.startNonInstantaneousActions(); }
 
-auto operator<<(nlohmann::json & json, const Init & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Init & datum) -> void
 {
-  json["Actions"] << datum.actions;
-
-  return json;
+  auto object = json.add_object("Actions");
+  object << datum.actions;
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

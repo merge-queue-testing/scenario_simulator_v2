@@ -58,16 +58,12 @@ auto Action::stop() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Action & datum) -> nlohmann::json &
+auto operator<<(SimplifiedJSON & json, const Action & datum) -> void
 {
-  json["name"] = datum.name;
-
-  json["currentState"] = boost::lexical_cast<std::string>(datum.state());
-
-  json["type"] =
-    apply<std::string>([](auto && action) { return makeTypename(action.type()); }, datum);
-
-  return json;
+  json.add("name", datum.name);
+  json.add("currentState", boost::lexical_cast<std::string>(datum.state()));
+  json.add(
+    "type", apply<std::string>([](auto && action) { return makeTypename(action.type()); }, datum));
 }
 }  // namespace syntax
 }  // namespace openscenario_interpreter

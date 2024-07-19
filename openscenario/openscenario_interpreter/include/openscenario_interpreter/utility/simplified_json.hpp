@@ -14,6 +14,9 @@
 
 // This is a very simplified JSON serializer.
 
+#ifndef OPENSCENARIO_INTERPRETER__UTILITY__SIMPLIFIED_JSON_HPP_
+#define OPENSCENARIO_INTERPRETER__UTILITY__SIMPLIFIED_JSON_HPP_
+
 #include <memory>
 #include <sstream>
 #include <string>
@@ -50,6 +53,9 @@ public:
     }
   }
 
+  // Remove the copy constructor
+  SimplifiedJSON(const SimplifiedJSON &) = delete;
+
   ~SimplifiedJSON() { finish(); }
 
   void finish()
@@ -67,14 +73,14 @@ public:
 
   std::string str() const { return ss->str(); }
 
-  [[nodiscard]] SimplifiedJSON add_object(const std::string & key)
+  [[nodiscard]] SimplifiedJSON add_object(const std::string key)
   {
     assert_type(Type::Object);
     add_key(key);
     return SimplifiedJSON(*this, Type::Object);
   }
 
-  [[nodiscard]] SimplifiedJSON add_array(const std::string & key)
+  [[nodiscard]] SimplifiedJSON add_array(const std::string key)
   {
     if (type == Type::Object) {
       add_key(key);
@@ -82,7 +88,7 @@ public:
     return SimplifiedJSON(*this, Type::Array);
   }
 
-  [[nodiscard]] SimplifiedJSON & add(const std::string & key, const std::string & value)
+  SimplifiedJSON & add(const std::string & key, const std::string value)
   {
     assert_type(Type::Object);
     add_key(key);
@@ -90,7 +96,7 @@ public:
     return *this;
   }
 
-  [[nodiscard]] SimplifiedJSON & add(const std::string & key, const double & value)
+  SimplifiedJSON & add(const std::string & key, const double value)
   {
     assert_type(Type::Object);
     add_key(key);
@@ -98,7 +104,7 @@ public:
     return *this;
   }
 
-  [[nodiscard]] SimplifiedJSON & add(const std::string & key, const int & value)
+  SimplifiedJSON & add(const std::string & key, const int value)
   {
     assert_type(Type::Object);
     add_key(key);
@@ -106,25 +112,48 @@ public:
     return *this;
   }
 
-  void append(const std::string & value)
+  SimplifiedJSON & add(const std::string & key, const size_t value)
+  {
+    assert_type(Type::Object);
+    add_key(key);
+    *ss << value;
+    return *this;
+  }
+
+  SimplifiedJSON & add(const std::string & key, const long value)
+  {
+    assert_type(Type::Object);
+    add_key(key);
+    *ss << value;
+    return *this;
+  }
+
+  void append(const std::string value)
   {
     assert_type(Type::Array);
     add_separator();
     *ss << "\"" << value << "\"";
   }
 
-  void append(const double & value)
+  void append(const double value)
   {
     assert_type(Type::Array);
     add_separator();
     *ss << value;
   }
 
-  void append(const int & value)
+  void append(const int value)
   {
     assert_type(Type::Array);
     add_separator();
     *ss << value;
+  }
+
+  SimplifiedJSON append_object()
+  {
+    assert_type(Type::Array);
+    add_separator();
+    return SimplifiedJSON(*this, Type::Object);
   }
 
 protected:
@@ -153,3 +182,5 @@ protected:
 
 }  // namespace utility
 }  // namespace openscenario_interpreter
+
+#endif  // OPENSCENARIO_INTERPRETER__UTILITY__SIMPLIFIED_JSON_HPP_

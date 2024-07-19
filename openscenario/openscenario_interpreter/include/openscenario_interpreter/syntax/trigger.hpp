@@ -18,6 +18,7 @@
 #include <nlohmann/json.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/condition_group.hpp>
+#include <openscenario_interpreter/utility/simplified_json.hpp>
 #include <pugixml.hpp>
 
 namespace openscenario_interpreter
@@ -54,7 +55,7 @@ struct Trigger : public std::list<ConditionGroup>
   auto evaluate() -> Object;
 };
 
-auto operator<<(nlohmann::json &, const Trigger &) -> nlohmann::json &;
+auto operator<<(SimplifiedJSON &, const Trigger &) -> void;
 
 static_assert(std::is_default_constructible<Trigger>::value);
 

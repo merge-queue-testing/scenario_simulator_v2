@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #define OPENSCENARIO_INTERPRETER_NO_EXTENSION
 
 #include <algorithm>
@@ -213,7 +214,8 @@ auto Interpreter::on_activate(const rclcpp_lifecycle::State &) -> Result
       [&]() {
         if (record) {
           record::start(
-            "-a", "-o", boost::filesystem::path(osc_path).replace_extension("").string());
+            "-a", "--storage", "mcap", "-o",
+            boost::filesystem::path(osc_path).replace_extension("").string());
         }
 
         SimulatorCore::activate(
@@ -284,13 +286,21 @@ auto Interpreter::publishCurrentContext() const -> void
 {
   Context context;
   {
-    nlohmann::json json;
     context.stamp = now();
+    auto start = std::chrono::steady_clock::now();
     if (publish_empty_context) {
       context.data = "";
     } else {
-      context.data = (json << *script).dump();
+      SimplifiedJSON json;
+      json << *script;
+      json.finish();
+      context.data = json.str();
     }
+    auto end = std::chrono::steady_clock::now();
+    RCLCPP_INFO_STREAM(
+      get_logger(), "JSON serialization took "
+                      << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+                      << " us");
     context.time = evaluateSimulationTime();
   }
 
