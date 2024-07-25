@@ -29,8 +29,10 @@ CppScenarioNode::CppScenarioNode(
         this->declare_parameter<std::string>("map_dir", map_path),
       lanelet2_map_file, scenario_filename, verbose),
     1.0, 20),
-  capture_cli_(this->create_client<std_srvs::srv::Trigger>(
+  screen_shot_capture_cli_(this->create_client<std_srvs::srv::Trigger>(
     "/debug/capture/screen_shot", rmw_qos_profile_default)),
+  video_capture_cli_(this->create_client<std_srvs::srv::Trigger>(
+    "/debug/capture/video_with_buffer", rmw_qos_profile_default)),
   scenario_filename_(scenario_filename),
   init_lane_id_(this->declare_parameter<int>("respawn.init_lane_id")),
   goal_lane_id_(this->declare_parameter<int>("respawn.goal_lane_id")),
@@ -67,6 +69,7 @@ void CppScenarioNode::start()
   api_.startNpcLogic();
   using namespace std::chrono_literals;
   update_timer_ = this->create_wall_timer(50ms, std::bind(&CppScenarioNode::update, this));
+  callServiceWithResponse<std_srvs::srv::Trigger>(video_capture_cli_, "capturing");
 }
 
 void CppScenarioNode::stop(Result result, const std::string & description)
@@ -219,7 +222,10 @@ bool CppScenarioNode::processForEgoStuck()
         api_.despawn(e);
       }
     }
-    callServiceWithoutResponse<std_srvs::srv::Trigger>(capture_cli_);
+    callServiceWithoutResponse<std_srvs::srv::Trigger>(screen_shot_capture_cli_);
+    callServiceWithResponse<std_srvs::srv::Trigger>(video_capture_cli_, "waiting for capture");
+    callServiceWithResponse<std_srvs::srv::Trigger>(video_capture_cli_, "capturing");
+
     has_cleared_npc_ = true;
   }
 
@@ -228,7 +234,7 @@ bool CppScenarioNode::processForEgoStuck()
     RCLCPP_ERROR(get_logger(), "\n\nEgo is in stuck. Respawn ego vehicle.\n\n");
     respawn(init_lane_id_, false, goal_lane_id_, false);
     has_respawned_ego_ = true;
-    callServiceWithoutResponse<std_srvs::srv::Trigger>(capture_cli_);
+    callServiceWithoutResponse<std_srvs::srv::Trigger>(screen_shot_capture_cli_);
   }
 
   if (std::abs(api_.getCurrentTwist("ego").linear.x) > 0.1) {
@@ -252,4 +258,28 @@ void CppScenarioNode::callServiceWithoutResponse(const typename rclcpp::Client<T
     RCLCPP_DEBUG(rclcpp::get_logger(__func__), "Status: %s", result.get()->message.c_str());
   });
 }
+
+template <typename T>
+void CppScenarioNode::callServiceWithResponse(
+  const typename rclcpp::Client<T>::SharedPtr client, const std::string & expected_message)
+{
+  auto req = std::make_shared<typename T::Request>();
+
+  if (!client->service_is_ready()) {
+    return;
+  }
+
+  client->async_send_request(
+    req, [this, expected_message](typename rclcpp::Client<T>::SharedFuture result) {
+      std::string received_message = result.get()->message;
+      if (received_message != expected_message) {
+        RCLCPP_ERROR(
+          this->get_logger(), "Received unexpected message. Expected: '%s', Received: '%s'",
+          expected_message.c_str(), received_message.c_str());
+      } else {
+        RCLCPP_DEBUG(this->get_logger(), "Status: %s", received_message.c_str());
+      }
+    });
+}
+
 }  // namespace cpp_mock_scenarios
