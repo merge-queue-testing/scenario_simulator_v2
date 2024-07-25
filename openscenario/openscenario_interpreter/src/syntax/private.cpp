@@ -22,7 +22,7 @@ namespace openscenario_interpreter
 inline namespace syntax
 {
 Private::Private(const pugi::xml_node & node, Scope & scope)
-: Scope(scope), entity_ref(readAttribute<String>("entityRef", node, local()))
+: Scope(scope), entity_ref(readAttribute<String>("entityRef", node, local()), scope)
 {
   actors.emplace_back(entity_ref);
 
@@ -87,7 +87,7 @@ auto Private::startNonInstantaneousActions() -> void
 
 auto operator<<(SimplifiedJSON & json, const Private & datum) -> void
 {
-  json.add("entityRef", datum.entity_ref);
+  json.add("entityRef", datum.entity_ref.name());
 
   {
     auto elements = json.add_array("PrivateAction");
