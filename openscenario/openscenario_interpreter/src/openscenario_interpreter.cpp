@@ -217,8 +217,7 @@ auto Interpreter::on_activate(const rclcpp_lifecycle::State &) -> Result
       [&]() {
         if (record) {
           record::start(
-            "-a", "--storage", "mcap", "-o",
-            boost::filesystem::path(osc_path).replace_extension("").string());
+            "-a", "-o", boost::filesystem::path(osc_path).replace_extension("").string());
         }
 
         SimulatorCore::activate(
