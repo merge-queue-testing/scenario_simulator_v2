@@ -288,12 +288,17 @@ auto Interpreter::publishCurrentContext() const -> void
   Context context;
   {
     nlohmann::json json;
+    auto start = std::chrono::steady_clock::now();
     context.stamp = now();
-    if (publish_empty_context) {
-      context.data = "";
-    } else {
-      context.data = (json << *script).dump();
-    }
+
+    context.data = (json << *script).dump();
+
+    auto end = std::chrono::steady_clock::now();
+    RCLCPP_INFO_STREAM(
+      get_logger(), "JSON serialization took "
+                      << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+                      << " us");
+
     context.time = evaluateSimulationTime();
   }
 
