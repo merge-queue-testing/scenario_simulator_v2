@@ -288,14 +288,12 @@ auto Interpreter::publishCurrentContext() const -> void
   {
     context.stamp = now();
     auto start = std::chrono::steady_clock::now();
-    if (publish_empty_context) {
-      context.data = "";
-    } else {
-      SimplifiedJSON json;
-      json << *script;
-      json.finish();
-      context.data = json.str();
-    }
+
+    SimplifiedJSON json;
+    json << *script;
+    json.finish();
+    context.data = json.str();
+
     auto end = std::chrono::steady_clock::now();
     RCLCPP_INFO_STREAM(
       get_logger(), "JSON serialization took "
