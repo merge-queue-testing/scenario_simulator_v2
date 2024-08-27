@@ -53,7 +53,7 @@ public:
     }
   }
 
-  static auto active() { return static_cast<bool>(core); }
+  static auto active() -> bool { return static_cast<bool>(core); }
 
   static auto deactivate() -> void
   {

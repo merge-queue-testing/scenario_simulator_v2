@@ -207,7 +207,7 @@ auto makeUpdatedStatus(
     return discard_the_front_waypoint_and_recurse();
   } else if (
     const auto [distance, remaining_time] =
-      [&]() {
+      [&, distance_to_front_waypoint = distance_to_front_waypoint]() {
         /*
            Note for anyone working on adding support for followingMode follow
            to this function (FollowPolylineTrajectoryAction::tick) in the
@@ -348,7 +348,7 @@ auto makeUpdatedStatus(
        In addition, the controller ensures a smooth stop at the last waypoint of the trajectory,
        with linear speed equal to zero and acceleration equal to zero.
     */
-    const auto desired_acceleration = [&]() -> double {
+    const auto desired_acceleration = [&, remaining_time = remaining_time, distance = distance]() -> double {
       try {
         return follow_waypoint_controller.getAcceleration(
           remaining_time, distance, acceleration, speed);

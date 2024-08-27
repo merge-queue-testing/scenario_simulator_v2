@@ -26,6 +26,8 @@ namespace math
 {
 namespace geometry
 {
+CatmullRomSpline::CatmullRomSpline() { }
+
 auto CatmullRomSpline::getPolygon(
   const double width, const size_t num_points, const double z_offset)
   -> std::vector<geometry_msgs::msg::Point>

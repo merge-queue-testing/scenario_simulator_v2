@@ -31,7 +31,7 @@ namespace geometry
 class CatmullRomSpline : public CatmullRomSplineInterface
 {
 public:
-  CatmullRomSpline() = default;
+  CatmullRomSpline();
   explicit CatmullRomSpline(const std::vector<geometry_msgs::msg::Point> & control_points);
   auto getLength() const -> double override { return total_length_; }
   auto getMaximum2DCurvature() const -> double;

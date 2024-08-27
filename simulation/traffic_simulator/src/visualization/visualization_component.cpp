@@ -127,14 +127,14 @@ const visualization_msgs::msg::MarkerArray VisualizationComponent::generateMarke
 
   const auto color = [&]() {
     switch (status.type.type) {
-      case status.type.EGO:
+      case traffic_simulator_msgs::msg::EntityType::EGO:
         return color_names::makeColorMsg("limegreen", 0.99);
-      case status.type.PEDESTRIAN:
+      case traffic_simulator_msgs::msg::EntityType::PEDESTRIAN:
         return color_names::makeColorMsg("orange", 0.99);
-      case status.type.VEHICLE:
+      case traffic_simulator_msgs::msg::EntityType::VEHICLE:
         return color_names::makeColorMsg("lightskyblue", 0.99);
       default:
-      case status.type.MISC_OBJECT:
+      case traffic_simulator_msgs::msg::EntityType::MISC_OBJECT:
         return color_names::makeColorMsg("magenta", 0.99);
     }
   }();

@@ -45,9 +45,9 @@ TEST(Metrics, GoalReachedMetric_goalReached)
   metric.setGoal(geometry_msgs::build<geometry_msgs::msg::Pose>()
                    .position(geometry_msgs::build<geometry_msgs::msg::Point>().x(5.0).y(5.0).z(0.0))
                    .orientation(geometry_msgs::msg::Quaternion()));
-  constexpr double a = std::sqrt(3.0) - 1e-3;
-  constexpr double less = 5.0 - a;
-  constexpr double more = 5.0 + a;
+  double a = std::sqrt(3.0) - 1e-3;
+  double less = 5.0 - a;
+  double more = 5.0 + a;
   EXPECT_TRUE(metric.isGoalReached(getCanonicalizedEntityStatus(0.0, 0.0, less, less)));
   EXPECT_TRUE(metric.isGoalReached(getCanonicalizedEntityStatus(0.0, 0.0, less, more)));
   EXPECT_TRUE(metric.isGoalReached(getCanonicalizedEntityStatus(0.0, 0.0, more, more)));

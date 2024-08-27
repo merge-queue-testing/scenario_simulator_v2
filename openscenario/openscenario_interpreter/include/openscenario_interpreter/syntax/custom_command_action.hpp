@@ -174,7 +174,7 @@ struct CustomCommand
 {
   const std::vector<std::string> parameters;
 
-  CustomCommand() = default;
+  CustomCommand() { }
 
   CustomCommand(const CustomCommand &) = default;
 
