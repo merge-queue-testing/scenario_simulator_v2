@@ -2,7 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>scenario_simulator_v2</name>
+<<<<<<< HEAD
   <version>4.2.2</version>
+=======
+  <version>4.2.6</version>
+>>>>>>> e78981c6ffdc8a40790c7587ecb0d6be1855d607
   <description>scenario testing framework for Autoware</description>
   <maintainer email="masaya.kataoka@tier4.jp">Masaya Kataoka</maintainer>
   <license>Apache License 2.0</license>
