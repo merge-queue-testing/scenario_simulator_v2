@@ -41,14 +41,15 @@ auto ScenarioDefinition::evaluate() -> Object
 
 auto operator<<(std::ostream & os, const ScenarioDefinition & datum) -> std::ostream &
 {
-  nlohmann::json json;
+  rabbit::object json;
 
-  return os << (json << datum).dump(2);
+  return os << (json << datum).str();
 }
 
-auto operator<<(nlohmann::json & json, const ScenarioDefinition & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const ScenarioDefinition & datum) -> rabbit::object &
 {
-  json["Storyboard"] << datum.storyboard;
+  rabbit::object storyboard = json["Storyboard"];
+  storyboard << datum.storyboard;
 
   return json;
 }

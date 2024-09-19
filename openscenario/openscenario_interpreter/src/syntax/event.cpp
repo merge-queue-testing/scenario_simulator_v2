@@ -17,6 +17,8 @@
 #include <openscenario_interpreter/syntax/custom_command_action.hpp>
 #include <openscenario_interpreter/syntax/event.hpp>
 
+#include "openscenario_interpreter/external/rabbit.hpp"
+
 namespace openscenario_interpreter
 {
 inline namespace syntax
@@ -67,24 +69,25 @@ auto Event::evaluate() -> Object
   }
 }
 
-auto operator<<(nlohmann::json & json, const Event & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Event & datum) -> rabbit::object &
 {
-  json["name"] = datum.name;
+  json["name"] = std::move(datum.name);
 
   json["currentState"] = boost::lexical_cast<std::string>(datum.state());
 
   json["currentExecutionCount"] = datum.current_execution_count;
   json["maximumExecutionCount"] = datum.maximum_execution_count;
 
-  json["Action"] = nlohmann::json::array();
+  json.insert("Action", rabbit::array());
 
   for (const auto & each : datum.elements) {
-    nlohmann::json action;
+    rabbit::object action;
     action << each.as<Action>();
-    json["Action"].push_back(action);
+    json["Action"].push_back(std::move(action));
   }
 
-  json["StartTrigger"] << datum.start_trigger;
+  rabbit::object start_trigger = json["StartTrigger"];
+  start_trigger << datum.start_trigger;
 
   return json;
 }

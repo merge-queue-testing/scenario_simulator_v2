@@ -85,16 +85,16 @@ auto Private::startNonInstantaneousActions() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Private & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Private & datum) -> rabbit::object &
 {
-  json["entityRef"] = datum.entity_ref.name();
+  json["entityRef"] = std::move(datum.entity_ref.name());
 
-  json["PrivateAction"] = nlohmann::json::array();
+  json.insert("PrivateAction", rabbit::array());
 
   for (const auto & private_action : datum.private_actions) {
-    nlohmann::json action;
+    rabbit::object action;
     action["type"] = makeTypename(private_action.type());
-    json["PrivateAction"].push_back(action);
+    json["PrivateAction"].push_back(std::move(action));
   }
 
   return json;

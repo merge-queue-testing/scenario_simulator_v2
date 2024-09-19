@@ -15,7 +15,7 @@
 #ifndef OPENSCENARIO_INTERPRETER__SYNTAX__PRIVATE_HPP_
 #define OPENSCENARIO_INTERPRETER__SYNTAX__PRIVATE_HPP_
 
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/entity.hpp>
 #include <openscenario_interpreter/syntax/private_action.hpp>
@@ -60,7 +60,7 @@ struct Private : public Scope
   auto startNonInstantaneousActions() -> void;
 };
 
-auto operator<<(nlohmann::json &, const Private &) -> nlohmann::json &;
+auto operator<<(rabbit::object &, const Private &) -> rabbit::object &;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

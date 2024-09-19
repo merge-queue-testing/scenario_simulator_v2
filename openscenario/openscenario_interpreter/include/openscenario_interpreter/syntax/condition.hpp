@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <functional>
 #include <list>
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/object.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/simulator_core.hpp>
@@ -90,7 +90,7 @@ private:
   }
 };
 
-auto operator<<(nlohmann::json &, const Condition &) -> nlohmann::json &;
+auto operator<<(rabbit::object &, const Condition &) -> rabbit::object &;
 }  // namespace syntax
 }  // namespace openscenario_interpreter
 

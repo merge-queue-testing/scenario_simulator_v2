@@ -15,7 +15,7 @@
 #ifndef OPENSCENARIO_INTERPRETER__SYNTAX__MANEUVER_GROUP_HPP_
 #define OPENSCENARIO_INTERPRETER__SYNTAX__MANEUVER_GROUP_HPP_
 
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/syntax/actors.hpp>
 #include <openscenario_interpreter/syntax/maneuver.hpp>
 #include <openscenario_interpreter/syntax/storyboard_element.hpp>
@@ -48,7 +48,7 @@ struct ManeuverGroup : public Scope, public StoryboardElement
 
   auto start() -> void override;
 
-  friend auto operator<<(nlohmann::json &, const ManeuverGroup &) -> nlohmann::json &;
+  friend auto operator<<(rabbit::object &, const ManeuverGroup &) -> rabbit::object &;
 };
 }  // namespace syntax
 }  // namespace openscenario_interpreter

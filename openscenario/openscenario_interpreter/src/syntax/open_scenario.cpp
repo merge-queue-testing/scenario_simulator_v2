@@ -44,11 +44,13 @@ auto OpenScenario::load(const boost::filesystem::path & filepath) -> const pugi:
   }
 }
 
-auto operator<<(nlohmann::json & json, const OpenScenario & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const OpenScenario & datum) -> rabbit::object &
 {
   json["version"] = "1.0";
 
-  json["frame"] = datum.frame;
+  json["frame"] = std::move(datum.frame);
+
+  json.insert("CurrentStates", rabbit::object());
 
   // clang-format off
   json["CurrentStates"]["completeState"]   = openscenario_interpreter::complete_state  .use_count() - 1;
@@ -59,7 +61,9 @@ auto operator<<(nlohmann::json & json, const OpenScenario & datum) -> nlohmann::
   // clang-format on
 
   if (datum.category.is<ScenarioDefinition>()) {
-    json["OpenSCENARIO"] << datum.category.as<ScenarioDefinition>();
+    rabbit::object scenario_definition;
+    scenario_definition << datum.category.as<ScenarioDefinition>();
+    json["OpenSCENARIO"].swap(scenario_definition);
   }
 
   return json;

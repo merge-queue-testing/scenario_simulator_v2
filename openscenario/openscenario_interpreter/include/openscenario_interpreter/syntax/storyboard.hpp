@@ -15,7 +15,7 @@
 #ifndef OPENSCENARIO_INTERPRETER__SYNTAX__STORYBOARD_HPP_
 #define OPENSCENARIO_INTERPRETER__SYNTAX__STORYBOARD_HPP_
 
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/simulator_core.hpp>
 #include <openscenario_interpreter/syntax/init.hpp>
@@ -52,7 +52,7 @@ struct Storyboard : public Scope,
 
   auto run() -> void override;
 
-  friend auto operator<<(nlohmann::json &, const Storyboard &) -> nlohmann::json &;
+  friend auto operator<<(rabbit::object &, const Storyboard &) -> rabbit::object &;
 };
 }  // namespace syntax
 }  // namespace openscenario_interpreter

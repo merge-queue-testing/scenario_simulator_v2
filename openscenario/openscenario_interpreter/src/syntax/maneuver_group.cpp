@@ -17,6 +17,8 @@
 #include <openscenario_interpreter/syntax/custom_command_action.hpp>
 #include <openscenario_interpreter/syntax/maneuver_group.hpp>
 
+#include "openscenario_interpreter/external/rabbit.hpp"
+
 namespace openscenario_interpreter
 {
 inline namespace syntax
@@ -59,21 +61,21 @@ auto ManeuverGroup::start() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const ManeuverGroup & maneuver_group) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const ManeuverGroup & maneuver_group) -> rabbit::object &
 {
-  json["name"] = maneuver_group.name;
+  json["name"] = std::move(maneuver_group.name);
 
   json["currentState"] = boost::lexical_cast<std::string>(maneuver_group.state());
 
   json["currentExecutionCount"] = maneuver_group.current_execution_count;
   json["maximumExecutionCount"] = maneuver_group.maximum_execution_count;
 
-  json["Maneuver"] = nlohmann::json::array();
+  json.insert("Maneuver", rabbit::array());
 
   for (auto && maneuver : maneuver_group.elements) {
-    nlohmann::json json_maneuver;
+    rabbit::object json_maneuver;
     json_maneuver << maneuver.as<Maneuver>();
-    json["Maneuver"].push_back(json_maneuver);
+    json["Maneuver"].push_back(std::move(json_maneuver));
   }
 
   return json;

@@ -58,21 +58,23 @@ auto Storyboard::run() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Storyboard & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Storyboard & datum) -> rabbit::object &
 {
-  json["currentState"] = boost::lexical_cast<std::string>(datum.state());
+  json["currentState"].set(boost::lexical_cast<std::string>(datum.state()));
 
-  json["Init"] << datum.init;
+  rabbit::object json_init;
+  json_init << datum.init;
+  json["Init"].swap(json_init);
 
-  json["Story"] = nlohmann::json::array();
+  json.insert("Story", rabbit::array());
 
   for (const auto & story : datum.elements) {
-    nlohmann::json each;
+    rabbit::object each;
     if (story.is<InitActions>()) {
       continue;
     }
     each << story.as<Story>();
-    json["Story"].push_back(each);
+    json["Story"].push_back(std::move(each));
   }
 
   return json;

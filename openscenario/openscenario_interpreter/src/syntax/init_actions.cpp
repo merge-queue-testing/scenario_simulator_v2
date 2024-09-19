@@ -154,30 +154,30 @@ auto InitActions::runNonInstantaneousActions() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const InitActions & init_actions) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const InitActions & init_actions) -> rabbit::object &
 {
-  json["GlobalAction"] = nlohmann::json::array();
+  json.insert("GlobalAction", rabbit::array());
 
   for (const auto & init_action : init_actions.global_actions) {
-    nlohmann::json action;
+    rabbit::object action;
     action["type"] = makeTypename(init_action.as<GlobalAction>().type());
-    json["GlobalAction"].push_back(action);
+    json["GlobalAction"].push_back(std::move(action));
   }
 
-  json["UserDefinedAction"] = nlohmann::json::array();
+  json.insert("UserDefinedAction", rabbit::array());
 
   for (const auto & init_action : init_actions.user_defined_actions) {
-    nlohmann::json action;
+    rabbit::object action;
     action["type"] = makeTypename(init_action.as<UserDefinedAction>().type());
-    json["UserDefinedAction"].push_back(action);
+    json["UserDefinedAction"].push_back(std::move(action));
   }
 
-  json["Private"] = nlohmann::json::array();
+  json.insert("Private", rabbit::array());
 
   for (const auto & init_action : init_actions.privates) {
-    nlohmann::json action;
+    rabbit::object action;
     action << init_action.as<Private>();
-    json["Private"].push_back(action);
+    json["Private"].push_back(std::move(action));
   }
 
   return json;

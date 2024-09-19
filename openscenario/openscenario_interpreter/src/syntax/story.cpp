@@ -49,18 +49,18 @@ auto Story::run() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Story & story) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Story & story) -> rabbit::object &
 {
   json["name"] = story.name;
 
-  json["currentState"] = boost::lexical_cast<std::string>(story.state());
+  json["currentState"].set(boost::lexical_cast<std::string>(story.state()));
 
-  json["Act"] = nlohmann::json::array();
+  json.insert("Act", rabbit::array());
 
   for (auto && act : story.elements) {
-    nlohmann::json json_act;
+    rabbit::object json_act;
     json_act << act.as<Act>();
-    json["Act"].push_back(json_act);
+    json["Act"].push_back(std::move(json_act));
   }
 
   return json;

@@ -64,18 +64,18 @@ auto Maneuver::running_events_count() const -> std::size_t
   return ret;
 }
 
-auto operator<<(nlohmann::json & json, const Maneuver & maneuver) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Maneuver & maneuver) -> rabbit::object &
 {
-  json["name"] = maneuver.name;
+  json["name"] = std::move(maneuver.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(maneuver.state());
+  json["currentState"].set(boost::lexical_cast<std::string>(maneuver.state()));
 
-  json["Event"] = nlohmann::json::array();
+  json.insert("Event", rabbit::array());
 
   for (const auto & event : maneuver.elements) {
-    nlohmann::json json_event;
+    rabbit::object json_event;
     json_event << event.as<Event>();
-    json["Event"].push_back(json_event);
+    json["Event"].push_back(std::move(json_event));
   }
 
   return json;

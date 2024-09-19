@@ -15,7 +15,7 @@
 #ifndef OPENSCENARIO_INTERPRETER__SYNTAX__TRIGGER_HPP_
 #define OPENSCENARIO_INTERPRETER__SYNTAX__TRIGGER_HPP_
 
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/scope.hpp>
 #include <openscenario_interpreter/syntax/condition_group.hpp>
 #include <pugixml.hpp>
@@ -54,7 +54,7 @@ struct Trigger : public std::list<ConditionGroup>
   auto evaluate() -> Object;
 };
 
-auto operator<<(nlohmann::json &, const Trigger &) -> nlohmann::json &;
+auto operator<<(rabbit::object &, const Trigger &) -> rabbit::object &;
 
 static_assert(std::is_default_constructible<Trigger>::value);
 

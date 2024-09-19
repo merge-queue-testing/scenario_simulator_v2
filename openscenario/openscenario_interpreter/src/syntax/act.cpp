@@ -46,18 +46,18 @@ auto Act::run() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Act & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Act & datum) -> rabbit::object &
 {
-  json["name"] = datum.name;
+  json["name"] = std::move(datum.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(datum.state());
+  json["currentState"].set(boost::lexical_cast<std::string>(datum.state()));
 
-  json["ManeuverGroup"] = nlohmann::json::array();
+  json.insert("ManeuverGroup", rabbit::array());
 
   for (auto && maneuver_group : datum.elements) {
-    nlohmann::json act;
+    rabbit::object act;
     act << maneuver_group.as<ManeuverGroup>();
-    json["ManeuverGroup"].push_back(act);
+    json["ManeuverGroup"].push_back(std::move(act));
   }
 
   return json;

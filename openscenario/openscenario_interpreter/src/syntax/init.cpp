@@ -42,9 +42,10 @@ auto Init::runNonInstantaneousActions() -> void { actions.runNonInstantaneousAct
 
 auto Init::startNonInstantaneousActions() -> void { actions.startNonInstantaneousActions(); }
 
-auto operator<<(nlohmann::json & json, const Init & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Init & datum) -> rabbit::object &
 {
-  json["Actions"] << datum.actions;
+  rabbit::object json_actions = json["Actions"];
+  json_actions << datum.actions;
 
   return json;
 }

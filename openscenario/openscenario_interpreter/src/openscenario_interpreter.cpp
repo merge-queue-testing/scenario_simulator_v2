@@ -15,7 +15,7 @@
 #define OPENSCENARIO_INTERPRETER_NO_EXTENSION
 
 #include <algorithm>
-#include <nlohmann/json.hpp>
+#include <openscenario_interpreter/external/rabbit.hpp>
 #include <openscenario_interpreter/openscenario_interpreter.hpp>
 #include <openscenario_interpreter/record.hpp>
 #include <openscenario_interpreter/syntax/object_controller.hpp>
@@ -216,7 +216,8 @@ auto Interpreter::on_activate(const rclcpp_lifecycle::State &) -> Result
       [&]() {
         if (record) {
           record::start(
-            "-a", "-o", boost::filesystem::path(osc_path).replace_extension("").string());
+            "-a", "--storage", "mcap", "-o",
+            boost::filesystem::path(osc_path).replace_extension("").string());
         }
 
         SimulatorCore::activate(
@@ -287,12 +288,19 @@ auto Interpreter::publishCurrentContext() const -> void
 {
   Context context;
   {
-    nlohmann::json json;
     context.stamp = now();
+    auto start = std::chrono::steady_clock::now();
+
     if (publish_empty_context) {
       context.data = "";
     } else {
-      context.data = (json << *script).dump();
+      rabbit::object json;
+      context.data = (json << *script).str();
+      auto end = std::chrono::steady_clock::now();
+      RCLCPP_INFO_STREAM(
+        get_logger(),
+        "JSON serialization took "
+          << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " us");
     }
     context.time = evaluateSimulationTime();
   }

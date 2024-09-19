@@ -58,11 +58,11 @@ auto Action::stop() -> void
   }
 }
 
-auto operator<<(nlohmann::json & json, const Action & datum) -> nlohmann::json &
+auto operator<<(rabbit::object & json, const Action & datum) -> rabbit::object &
 {
-  json["name"] = datum.name;
+  json["name"] = std::move(datum.name);
 
-  json["currentState"] = boost::lexical_cast<std::string>(datum.state());
+  json["currentState"].set(boost::lexical_cast<std::string>(datum.state()));
 
   json["type"] =
     apply<std::string>([](auto && action) { return makeTypename(action.type()); }, datum);
